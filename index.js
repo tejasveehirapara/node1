@@ -9,21 +9,21 @@ dotenv.config()
 import { UserRoute } from './route/UserRoute.mjs';
 import router from "./route/index.mjs";
 import path, { dirname } from "path";
+import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename);
 const app = express()
 app.use(cookieParser())
 app.use(cors({
-    origin: ["http://localhost:3000/"],
+    origin: ["http://localhost:5000/"],
     credentials: true
 }))
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "./", '/uploads')))
-app.use(multer().any());
+app.use(express.static(path.join(__dirname, 'upload')));
 
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 const PORT = process.env.PORT || 8080
 
@@ -80,4 +80,3 @@ mongoose.connect('mongodb://localhost:27017/crud-operation', {
 }).catch((err) => {
     console.log('first')
 })
-

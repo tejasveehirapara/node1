@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import { UserModal } from "../modal/UserModal.mjs"
 import { sendMail } from "../utils/SendMail.mjs"
 import { tokenGenerate, tokenVerify } from "../utils/CreateToken.mjs"
+import { UserSessionModal } from "../modal/UserSession.mjs"
 
 const route = express.Router()
 
@@ -37,6 +38,10 @@ route.post("/login", async (req, res) => {
     }
     const token = tokenGenerate(isExist._id, '1h')
     res.cookie('token', token, { httpOnly: true, maxAge: 360000, secure: true })
+    await UserSessionModal.create({
+        userId: isExist._id,
+        token: token
+    })
     return res.send({ status: true, message: 'Login successfully', data: isExist, token })
 })
 

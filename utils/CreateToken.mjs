@@ -6,5 +6,11 @@ export const tokenGenerate = (id, expiresIn) => {
 }
 
 export const tokenVerify = (token) => {
-    return jsonwebtoken.verify(token, process.env.KEY)
+    let value;
+    try {
+        value = jsonwebtoken.verify(token, process.env.KEY)
+    } catch (err) {
+        value = null
+    }
+    return value
 }
