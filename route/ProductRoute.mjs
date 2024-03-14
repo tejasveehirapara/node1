@@ -8,6 +8,7 @@ const route = express.Router()
 
 
 route.post('/add-product', upload.single('product_image'), checkAuth, async (req, res) => {
+
     try {
         const validation = new Validator(req.body, {
             product_name: "required",
@@ -18,6 +19,10 @@ route.post('/add-product', upload.single('product_image'), checkAuth, async (req
         // console.log(req.body, req.files, 'filesss')
         const { product_name, date } = req.body
         const productData = { product_name, date }
+        console.log(req.user, "userrrr")
+        if (req.user) {
+            productData.userId = req.user._id
+        }
         const url = req.protocol + '://' + req.get("host");
         if (req?.file?.originalname) {
             productData.product_image = url + '/product_image/' + req.file.originalname
@@ -34,9 +39,10 @@ route.post('/add-product', upload.single('product_image'), checkAuth, async (req
 })
 
 
-route.get('/get-product', async (req, res) => {
+route.get('/get-product', checkAuth, async (req, res) => {
     try {
-        const data = await ProductModal.find({})
+        const userId = req.user._id
+        const data = await ProductModal.find({ userId: userId })
         return res.send({ message: "Get....", data: data })
 
     } catch (err) {
