@@ -36,7 +36,7 @@ route.post("/login", async (req, res) => {
     if (!validPassword) {
         return res.json({ message: "password is incorrect" })
     }
-    const token = tokenGenerate(isExist._id, '1h')
+    const token = tokenGenerate(isExist._id, '10h')
     res.cookie('token', token, { httpOnly: true, maxAge: 360000, secure: true })
     await UserSessionModal.create({
         userId: isExist._id,
